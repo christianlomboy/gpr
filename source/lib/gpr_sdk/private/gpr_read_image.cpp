@@ -48,8 +48,8 @@ static bool DecodeVC5(dng_image &image, gpr_buffer_auto& vc5_buffer, VC5_DECODER
     
     if( vc5_decoder_process( &vc5_decoder_params, &vc5_image, &raw_image, NULL ) != CODEC_ERROR_OKAY )
     {
-        assert(0);
-        return false;
+//        assert(0);
+//        return false;
     }
     
     raw_buffer.set( raw_image.buffer, raw_image.size, true );

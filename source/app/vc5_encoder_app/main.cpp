@@ -101,7 +101,7 @@ public:
     the pathname to a file that will contain the encoded bitstream_file.  Media containers are not
     currently supported by the reference encoder.  The command-line options are described in @ref ParseParameters.
 */
-int main(int argc, char *argv[])
+int process(int argc, char **argv)
 {
     my_argument_parser args;
 

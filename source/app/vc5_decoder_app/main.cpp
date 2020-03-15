@@ -90,7 +90,7 @@ public:
 	The image is decoded to the same dimensions as the encoded image and the decoded format
 	is the same format as the original source image input to the encoder.
 */
-int main(int argc, char *argv[])
+int process(int argc, char **argv)
 {
     my_argument_parser args;
     

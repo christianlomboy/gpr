@@ -1411,7 +1411,7 @@ CODEC_ERROR UpdateCodecState(DECODER *decoder, BITSTREAM *stream, TAGVALUE segme
                     chunk_size = 0;
                 }
                 
-                assert(optional);
+//                assert(optional);
                 if (!optional)
                 {
                     error = CODEC_ERROR_BITSTREAM_SYNTAX;
