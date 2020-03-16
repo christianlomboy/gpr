@@ -230,11 +230,11 @@ int client_app(int argc, char *argv[]) {
     }
 
     // read picture size
-//    printf("Reading picture size...\n");
-//    int size;
-//    read(network_socket, &size, sizeof(int));
-//    printf("%i", size);
-//    printf(" bytes\n");
+    printf("Reading picture size...\n");
+    int size;
+    read(network_socket, &size, sizeof(int));
+    printf("%i", size);
+    printf(" bytes\n");
 
     // read picture byte array
     printf("Reading picture byte array...\n");
@@ -242,7 +242,7 @@ int client_app(int argc, char *argv[]) {
 
     // convert it back into a pic
     printf("Converting byte array to DNG...\n");
-    FILE *image = fopen("out_compressed.GPR", "w");
+    FILE *image = fopen("out_compressed.GPR", "wb");
     int nb;
     while ((nb = read(network_socket, p_array, BUFSIZ)) > 0) {
         fwrite(p_array, 1, nb, image);
@@ -303,7 +303,7 @@ int server_app(int argc, char *argv[]) {
     // get picture size
     char *fpath = process_argv[4];
     FILE *picture;
-    picture = fopen(fpath, "r");
+    picture = fopen(fpath, "rb");
     int size;
     fseek(picture, 0, SEEK_END);
     size = ftell(picture);
@@ -316,7 +316,7 @@ int server_app(int argc, char *argv[]) {
     char send_buffer[BUFSIZ];
     int nb = fread(send_buffer, 1, sizeof(send_buffer), picture);
 
-    while (!feof(picture)) {
+    while (nb > 0) {
         write(client_socket, send_buffer, nb);
         nb = fread(send_buffer, 1, sizeof(send_buffer), picture);
     }
