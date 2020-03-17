@@ -33,7 +33,7 @@
 #include <sys/types.h>
 #include <sys/socket.h>
 #include <netinet/in.h>
-
+#include <arpa/inet.h>
 #include "argument_parser.h"
 
 #include "gpr.h"
@@ -42,6 +42,10 @@
 #include "main_c.h"
 
 #include "common_app_def.h"
+
+#define PC_IP "192.168.1.123"
+#define MAC_IP "192.168.1.100"
+#define PORT_NO 9002
 
 using namespace std;
 
@@ -211,16 +215,20 @@ int process(int argc, char **argv) {
     return 0;
 }
 
+/// MacBook Pro
 int client_app(int argc, char *argv[]) {
     // create a socket
     int network_socket;
-    network_socket = socket(AF_INET, SOCK_STREAM, 0);
+    network_socket = socket(AF_INET, SOCK_STREAM, 0); // 0 == use TCP
 
     // specify an address for the socket
     struct sockaddr_in server_address;
+    bzero(&server_address, sizeof(server_address));
     server_address.sin_family = AF_INET;
-    server_address.sin_port = htons(9002);
-    server_address.sin_addr.s_addr = INADDR_ANY;
+    server_address.sin_port = htons(PORT_NO);
+    if (inet_aton(PC_IP, &server_address.sin_addr) <= 0) {
+        printf("Error connecting to IP.\n\n");
+    }
 
     // connect returns an integer
     int connection_status = connect(network_socket, (struct sockaddr *) &server_address, sizeof(server_address));
@@ -264,6 +272,7 @@ int client_app(int argc, char *argv[]) {
     process(process_argc, process_argv);
 }
 
+/// PC
 int server_app(int argc, char *argv[]) {
 
     /// gpr_tools server -i in.DNG -o compressed.GPR - we want 2 thru 5
@@ -281,13 +290,10 @@ int server_app(int argc, char *argv[]) {
     int server_socket;
     server_socket = socket(AF_INET, SOCK_STREAM, 0);
 
-    // define the port number
-    int port = 9002;
-
     // define the server address
     struct sockaddr_in server_address;
     server_address.sin_family = AF_INET;
-    server_address.sin_port = htons(port);
+    server_address.sin_port = htons(PORT_NO);
     server_address.sin_addr.s_addr = INADDR_ANY;
 
     // bind the socket to our specified IP and port
